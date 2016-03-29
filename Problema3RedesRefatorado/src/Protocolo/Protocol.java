@@ -11,6 +11,8 @@ package Protocolo;
  */
 public class Protocol {
     
+    public static int SERVIDOR = 0;
     public static int CLIENTE = 1;
+    
     
 }

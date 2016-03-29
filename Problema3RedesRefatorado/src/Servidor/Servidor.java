@@ -5,6 +5,7 @@
  */
 package Servidor;
 
+import Protocolo.Protocol;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -30,8 +31,8 @@ public class Servidor {
         ServerSocket server = new ServerSocket(port);
         System.err.println("O servidor está operando na porta: "+ port);
         Socket socket = new Socket("localhost", 11111);
-        System.err.println("Enviando o ip e a porta para o distribuidor");
         saidaSocket = new DataOutputStream(socket.getOutputStream());
+        saidaSocket.writeInt(Protocol.SERVIDOR);
         
         while(true){
             System.err.println("Aguardando novas conexões");

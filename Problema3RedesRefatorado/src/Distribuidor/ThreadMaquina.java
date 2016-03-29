@@ -17,35 +17,40 @@ import java.util.logging.Logger;
  *
  * @author allen
  */
-public class ThreadMaquina implements Runnable{
+public class ThreadMaquina implements Runnable {
 
     private Socket socket;
     private DataInputStream entradaSocket;
     private DataOutputStream saidaSocket;
-    
-    
-    
 
     public ThreadMaquina(Socket socket, DataInputStream entradaSocket, DataOutputStream saidaSocket) {
         this.socket = socket;
         this.entradaSocket = entradaSocket;
         this.saidaSocket = saidaSocket;
-    
+
     }
+
     @Override
     public void run() {
-        
-        try {
-            int opcao = entradaSocket.readInt();
-            System.out.println("Opção: " + opcao);
-            switch (opcao){
-                case 1: // diz se é cliente
-                    break;
+
+     
+            try {
+                
+                int opcao = entradaSocket.readInt();
+                System.out.println("Opção: " + opcao);
+                switch (opcao) {
+                    case 0:
+                        System.out.println("Novo Servidor se conectou");
+                        break;
+                    case 1: // diz se é cliente
+                        System.out.println("Novo CLiente se conectou");
+                        break;
+                }
+
+            } catch (IOException ex) {
+                Logger.getLogger(ThreadMaquina.class.getName()).log(Level.SEVERE, null, ex);
             }
-                    
-        } catch (IOException ex) {
-            Logger.getLogger(ThreadMaquina.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-    }
+
+    
 }

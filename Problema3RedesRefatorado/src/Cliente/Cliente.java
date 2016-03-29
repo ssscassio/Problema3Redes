@@ -19,10 +19,12 @@ public class Cliente {
     public static void main(String[] args) throws IOException {
         
         DataOutputStream saidaSocket;
+        DataInputStream entradaSocket;
         Socket cliente = new Socket("localhost", 11111);
         System.err.println("Cliente se conectou ao distribuidor");
         saidaSocket = new DataOutputStream(cliente.getOutputStream());
         saidaSocket.writeInt(Protocol.CLIENTE);
+        
         
     }
 }
