@@ -39,11 +39,19 @@ public class ThreadMaquina implements Runnable {
                 int opcao = entradaSocket.readInt();
                 System.out.println("Opção: " + opcao);
                 switch (opcao) {
+                    // como thread de servidor será diferente de thread de cliente irei personalizar cada uma
+                    // cassio lembrando que essa thread irá morrer depois da criação
                     case 0:
                         System.out.println("Novo Servidor se conectou");
+                        TratamentoServidor server = new TratamentoServidor(socket, entradaSocket , saidaSocket);
+                        Thread s = new Thread(server);
+                        s.start();
                         break;
                     case 1: // diz se é cliente
                         System.out.println("Novo CLiente se conectou");
+                        TratamentoCliente cliente = new TratamentoCliente(socket, entradaSocket , saidaSocket);
+                        Thread c = new Thread(cliente);
+                        c.start();
                         break;
                 }
 
