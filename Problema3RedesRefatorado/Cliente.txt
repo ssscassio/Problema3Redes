@@ -1,0 +1,3 @@
+cliente: Cassio valor total de compra: 625.0
+cliente: Allen valor total de compra: 264.0
+cliente: Paulo valor total de compra: 124.0
