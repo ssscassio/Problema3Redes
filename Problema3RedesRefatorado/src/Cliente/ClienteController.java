@@ -58,6 +58,7 @@ class ClienteController {
             //Recebe a porta do servidor que vai se conectar
             this.portaServidor = dEntradaSocket.readInt();
             
+            System.err.println("Cliente recebeu Servidor para conectar: "+ipServidor +"-"+portaServidor);
             //Estabelece conexão com o Distribuidor
             Socket cliente = new Socket(this.ipServidor, this.portaServidor);
             System.err.println("Cliente se conectou ao Servidor");

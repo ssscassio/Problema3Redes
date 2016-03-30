@@ -44,11 +44,15 @@ public class TratamentoCliente implements Runnable{
                         break;
                     case Protocol.INFORMAR_QUEDA_SERVIDOR:
                         //Fazer Operacoes de reoganizacao
+                        String ipServidorCaiu = entradaSocket.readUTF();
+                        int portaServidorCaiu = entradaSocket.readInt();
+                        controller.removerServidor(ipServidorCaiu, portaServidorCaiu);
+                        controller.reorganizarSemaforos();
                         break;
                 }
             }
         } catch(IOException e){
-            e.printStackTrace();
+            //e.printStackTrace();
         }
        
     }

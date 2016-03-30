@@ -52,7 +52,7 @@ public class ThreadMaquina implements Runnable {
                         s.start();
                         break;
                     case Protocol.CLIENTE: // diz se é cliente
-                        System.out.println("Novo CLiente se conectou");
+                        System.out.println("Novo Cliente se conectou");
                         TratamentoCliente cliente = new TratamentoCliente(controller, socket, entradaSocket , saidaSocket);
                         Thread c = new Thread(cliente);
                         c.start();

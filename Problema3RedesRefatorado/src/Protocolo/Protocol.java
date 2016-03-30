@@ -19,9 +19,18 @@ public class Protocol {
     //Comunicação Servidor-Distribuidor
     public final static int SERVIDOR_ENVIAR_IP_PORTA = 3;
     public final static int LISTA_DE_IPS = 4;
+    public final static int LISTA_LIVRO_COM_SEMAFORO = 5;
     
     //Comunicacao Distribuidor-Cliente
-    public final static int CONECTAR_COM_SERVIDOR =5;
-    public final static int INFORMAR_QUEDA_SERVIDOR = 6;
+    public final static int CONECTAR_COM_SERVIDOR =6;
+    public final static int INFORMAR_QUEDA_SERVIDOR = 7;
+    
+    //Comunicação Cliente-Servidor
+    public final static int RECEBER_LISTA_LIVROS = 8;
+    public final static int EFETUAR_COMPRA = 9;
+            
+    //Comunicação Servidor-Servidor
+    public final static int VERIFICAR_SEMAFORO = 10;
+    public final static int ATUALIZAR_LINHA_LIVRO = 11;
     
 }

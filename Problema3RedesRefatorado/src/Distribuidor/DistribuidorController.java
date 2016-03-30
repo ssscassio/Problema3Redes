@@ -81,4 +81,23 @@ public class DistribuidorController {
         cliente.conectarComServidor(servidorParaConectar.getIpServidor(), servidorParaConectar.getPortaDeAcesso());
         
     }
+
+    void removerServidor(String ipServidorCaiu, int portaServidorCaiu) {
+        String busca = ipServidorCaiu + "-" + portaServidorCaiu;
+        int index = 0;
+        if(ipsPortas.contains(busca)){
+            for(;index<ipsPortas.size() && ipsPortas.equals(busca);index ++);//For para parar no index do servidor que caiu;
+            
+            //Fazer remoção de todas as listas:
+            ipsPortas.remove(index);
+            servidoresConectados.remove(index);
+            conexoes.remove(index);
+        
+        }
+        
+    }
+
+    void reorganizarSemaforos() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

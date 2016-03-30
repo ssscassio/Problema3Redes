@@ -41,7 +41,8 @@ public class TratamentoDistribuidor implements Runnable{
                         controller.setListaDeIps(listaOutrosServidores);
                         controller.conectarComServidores();
                         break;
-
+                    case Protocol.LISTA_LIVRO_COM_SEMAFORO:
+                        break;
                 }
             }
         } catch (IOException ex) {
