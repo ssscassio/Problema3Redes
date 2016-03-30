@@ -18,8 +18,10 @@ public class TratamentoDistribuidor implements Runnable{
     private Socket socket;
     private DataInputStream entradaSocket;
     private DataOutputStream saidaSocket;
+    private ServidorController controller;
     TratamentoDistribuidor(ServidorController controller, Socket socket) throws IOException {
         this.socket = socket;
+        this.controller = controller;
         this.entradaSocket = new DataInputStream(socket.getInputStream());
         this.saidaSocket = new DataOutputStream(socket.getOutputStream());
     }
@@ -28,15 +30,19 @@ public class TratamentoDistribuidor implements Runnable{
     public void run() {
 
         try {
-            int opcao = entradaSocket.readInt();
-            switch(opcao){
-                case Protocol.LISTA_DE_IPS:
-                    String listaOutrosServidores;
-                    listaOutrosServidores = entradaSocket.readUTF();
-                    System.err.println("IPs recebidos do distribuidor:");
-                    System.err.println(listaOutrosServidores);
-                    break;
+            while(true){
+                int opcao = entradaSocket.readInt();
+                switch(opcao){
+                    case Protocol.LISTA_DE_IPS:
+                        String listaOutrosServidores;
+                        listaOutrosServidores = entradaSocket.readUTF();
+                        System.err.println("IPs recebidos do distribuidor:");
+                        System.err.println(listaOutrosServidores);
+                        controller.setListaDeIps(listaOutrosServidores);
+                        controller.conectarComServidores();
+                        break;
 
+                }
             }
         } catch (IOException ex) {
             ex.printStackTrace();

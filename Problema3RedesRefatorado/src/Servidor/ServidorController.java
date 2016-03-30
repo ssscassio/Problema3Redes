@@ -8,6 +8,7 @@ package Servidor;
 import Protocolo.Protocol;
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 
 /**
  *
@@ -15,9 +16,14 @@ import java.net.*;
  */
 public class ServidorController {
  
-    public ServidorController(){
+    private String ipPortaOutrosServidores;
+    private ArrayList<Socket> conexaoServidores = new ArrayList<Socket>();
+    private String ip;
+    private int portaDeAcesso;
     
-    
+    public ServidorController(String ip, int portaDeAcesso){
+        this.ip = ip;
+        this.portaDeAcesso = portaDeAcesso;
     }
     
     
@@ -31,7 +37,8 @@ public class ServidorController {
         saidaSocket = new DataOutputStream(socket.getOutputStream());
         
         saidaSocket.writeInt(Protocol.SERVIDOR);//Código para dizer que é Servidor
-        
+        System.err.println("Enviou código para dizer que é servidor");
+
         saidaSocket.writeInt(Protocol.SERVIDOR_ENVIAR_IP_PORTA);//Código para dizer que vai enviar IP e PORTA
         saidaSocket.writeUTF(socket.getLocalAddress().getHostAddress());
         saidaSocket.writeInt(port);
@@ -49,11 +56,29 @@ public class ServidorController {
         //E no controller do Servidor tem que ter o socket do DIstribuidor. Não seria isso?
         //não manjo de controller nao, maspelo que disse acho que está certo,
         //Ahh, Deixa os comentarios aqui, vai ficar mais fácil de fazer o relatório.
-        TratamentoDistribuidor tratamento = new TratamentoDistribuidor(this, socket);
-        Thread t = new Thread(tratamento);
-        t.start();
+        
     
     }
     
+    public void setListaDeIps(String outrosServidores){
+        this.ipPortaOutrosServidores = outrosServidores;
+    }
+
+    public void conectarComServidores() throws IOException {
+        
+        conexaoServidores = new ArrayList<Socket>();
+        String ipPorta[] = this.ipPortaOutrosServidores.split("/");
+        for(int i = 0; i <ipPorta.length;i++){
+            System.err.println("Estabelecendo conexao com servidor: "+ ipPorta[i]);
+            String aux[] = ipPorta[i].split("-");
+            Socket socket = new Socket(aux[0], Integer.parseInt(aux[1]));
+            conexaoServidores.add(socket);
+            DataOutputStream saidaSocket = new DataOutputStream(socket.getOutputStream());
     
+            saidaSocket.writeInt(Protocol.SERVIDOR);//Código para dizer que é Servidor
+            System.err.println("Enviou código para dizer que é servidor");
+
+        
+        }
+    }
 }

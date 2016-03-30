@@ -44,19 +44,23 @@ public class TratamentoServidor implements Runnable {
     public void run() {
         System.err.println("Inciando thread do servidor");
         try {
-            //Inicio de Conexão do Servidor com o distribuidor
-            //Servidor Envia Seu IP, e sua porta de acesso
-            int opcao = entradaSocket.readInt();//Enviar Codigo de operacao
-            switch(opcao){
-                case Protocol.SERVIDOR_ENVIAR_IP_PORTA:
-                    this.ipServidor = entradaSocket.readUTF();
-                    this.portaDeAcesso = entradaSocket.readInt();
-                    System.err.println("Informações do Servidor: IP: "+ipServidor+" Porta de Acesso: "+portaDeAcesso);
-                    controller.adicionarServidor(this);
-                    controller.enviarIps();//Envia os Ips dos outros servidores para todos os servidores    
-                    break;
-                    
-            
+            while(true){
+                //Inicio de Conexão do Servidor com o distribuidor
+                //Servidor Envia Seu IP, e sua porta de acesso
+                int opcao = entradaSocket.readInt();//Enviar Codigo de operacao
+                switch(opcao){
+                    case Protocol.SERVIDOR_ENVIAR_IP_PORTA:
+                        this.ipServidor = entradaSocket.readUTF();
+                        this.portaDeAcesso = entradaSocket.readInt();
+                        System.err.println("Informações do Servidor: IP: "+ipServidor+" Porta de Acesso: "+portaDeAcesso);
+                        controller.adicionarServidor(this);
+                        if(controller.getNumServidoresConectados() > 1){//Envia apenas se tiver mais de 1 servidor conectado
+                            controller.enviarIps();//Envia os Ips dos outros servidores para todos os servidores    
+                        }
+                        break;
+
+
+                }
             }
             
         } catch (IOException ex) {

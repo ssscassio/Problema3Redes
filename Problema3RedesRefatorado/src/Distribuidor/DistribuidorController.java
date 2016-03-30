@@ -6,7 +6,7 @@
 package Distribuidor;
 
 import Protocolo.Protocol;
-import java.io.IOException;
+import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -20,17 +20,25 @@ public class DistribuidorController {
     
     private ArrayList<String> ipsPortas; //Cada String no formato IP-PORTA
     private ArrayList<TratamentoServidor> servidoresConectados = new ArrayList<TratamentoServidor>();
-    
+    private ArrayList<Socket> conexoes = new ArrayList<Socket>();
     public DistribuidorController(){
     
     
     }
 
-    public void adicionarServidor(TratamentoServidor server) {
+    public void adicionarServidor(TratamentoServidor server) throws IOException {
         this.servidoresConectados.add(server);
+        //Estabelecer conexão com o servidor:
+        System.err.println("Estabelecendo conexão com servidor: "+server.getIpServidor()+"-"+ server.getPortaDeAcesso());
+        Socket socket = new Socket(server.getIpServidor(), server.getPortaDeAcesso());
+        DataOutputStream saidaSocket = new DataOutputStream(socket.getOutputStream());
+        
+        saidaSocket.writeInt(Protocol.DISTRIBUIDOR);//Código para dizer que é DISTRIBUIDOR
+        
+        this.conexoes.add(socket);
     }
 
-    public void enviarIps() {
+    public void enviarIps() {//Chamar tanto quando servidor entra, como quando servidor sai
         //Reinicia a lista de IPsPorta;
         this.ipsPortas = new ArrayList<String>();
         
@@ -50,12 +58,18 @@ public class DistribuidorController {
                 }
             }
             try {
-                servidoresConectados.get(i).getOutput().writeInt(Protocol.LISTA_DE_IPS);//Envia código de operação dizendo que vai enviar IPS
-                servidoresConectados.get(i).getOutput().writeUTF(aux);
+                DataOutputStream saidaSocket = new DataOutputStream(conexoes.get(i).getOutputStream());
+                saidaSocket.writeInt(Protocol.LISTA_DE_IPS);//Envia código de operação dizendo que vai enviar IPS
+                saidaSocket.writeUTF(aux);
+                System.err.println("Distribuidor Enviou Ips para servidor:"+ servidoresConectados.get(i).getIpServidor() + "-" + servidoresConectados.get(i).getPortaDeAcesso());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
         
         }
+    }
+    
+    public int getNumServidoresConectados(){
+        return this.conexoes.size();
     }
 }

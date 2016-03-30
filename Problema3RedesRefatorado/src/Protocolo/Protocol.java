@@ -13,8 +13,10 @@ public class Protocol {
     
     public final static int SERVIDOR = 0;
     public final static int CLIENTE = 1;
-    public final static int SERVIDOR_ENVIAR_IP_PORTA = 2;
-    public final static int LISTA_DE_IPS = 3;
+    public final static int DISTRIBUIDOR = 2;
+    
+    public final static int SERVIDOR_ENVIAR_IP_PORTA = 3;
+    public final static int LISTA_DE_IPS = 4;
     
     
 }
