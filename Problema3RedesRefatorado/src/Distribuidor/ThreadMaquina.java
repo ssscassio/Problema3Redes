@@ -37,32 +37,32 @@ public class ThreadMaquina implements Runnable {
     public void run() {
 
      
-            try {
-                
-                int opcao = entradaSocket.readInt();
-                System.out.println("Opção: " + opcao);
-                switch (opcao) {
-                    // como thread de servidor será diferente de thread de cliente irei personalizar cada uma
-                    // cassio lembrando que essa thread irá morrer depois da criação
-                    case Protocol.SERVIDOR://diz que é Servidor
-                        System.out.println("Novo Servidor se conectou");
-                        TratamentoServidor server = new TratamentoServidor(controller, socket, entradaSocket , saidaSocket);
-                        Thread s = new Thread(server);
-                        //this.controller.enviarArquivoNovosSemaforos(); //Envia o arquivo com os novos semaforos para todos os servidores
-                        s.start();
-                        break;
-                    case Protocol.CLIENTE: // diz se é cliente
-                        System.out.println("Novo Cliente se conectou");
-                        TratamentoCliente cliente = new TratamentoCliente(controller, socket, entradaSocket , saidaSocket);
-                        Thread c = new Thread(cliente);
-                        c.start();
-                        break;
-                }
+        try {
 
-            } catch (IOException ex) {
-                Logger.getLogger(ThreadMaquina.class.getName()).log(Level.SEVERE, null, ex);
+            int opcao = entradaSocket.readInt();
+            System.out.println("Opção: " + opcao);
+            switch (opcao) {
+                // como thread de servidor será diferente de thread de cliente irei personalizar cada uma
+                // cassio lembrando que essa thread irá morrer depois da criação
+                case Protocol.SERVIDOR://diz que é Servidor
+                    System.out.println("Novo Servidor se conectou");
+                    TratamentoServidor server = new TratamentoServidor(controller, socket, entradaSocket , saidaSocket);
+                    Thread s = new Thread(server);
+                    //this.controller.enviarArquivoNovosSemaforos(); //Envia o arquivo com os novos semaforos para todos os servidores
+                    s.start();
+                    break;
+                case Protocol.CLIENTE: // diz se é cliente
+                    System.out.println("Novo Cliente se conectou");
+                    TratamentoCliente cliente = new TratamentoCliente(controller, socket, entradaSocket , saidaSocket);
+                    Thread c = new Thread(cliente);
+                    c.start();
+                    break;
             }
+
+        } catch (IOException ex) {
+            Logger.getLogger(ThreadMaquina.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
 
     
 }

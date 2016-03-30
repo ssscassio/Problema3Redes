@@ -28,9 +28,10 @@ public class Protocol {
     //Comunicação Cliente-Servidor
     public final static int RECEBER_LISTA_LIVROS = 8;
     public final static int EFETUAR_COMPRA = 9;
+    public final static int ENVIAR_NOME_CLIENTE = 10;
             
     //Comunicação Servidor-Servidor
-    public final static int VERIFICAR_SEMAFORO = 10;
-    public final static int ATUALIZAR_LINHA_LIVRO = 11;
+    public final static int VERIFICAR_SEMAFORO = 11;
+    public final static int ATUALIZAR_LINHA_LIVRO = 12;
     
 }

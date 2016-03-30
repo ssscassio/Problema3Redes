@@ -28,6 +28,9 @@ class ClienteController {
     private DataOutputStream sSaidaSocket;
     private DataInputStream sEntradaSocket;
     
+    //Referente ao cliente
+    private String clienteNome;
+    
     
     public ClienteController(String ipDistribuidor){
         this.ipDistribuidor = ipDistribuidor;
@@ -59,7 +62,7 @@ class ClienteController {
             this.portaServidor = dEntradaSocket.readInt();
             
             System.err.println("Cliente recebeu Servidor para conectar: "+ipServidor +"-"+portaServidor);
-            //Estabelece conexão com o Distribuidor
+            //Estabelece conexão com o Servidor
             Socket cliente = new Socket(this.ipServidor, this.portaServidor);
             System.err.println("Cliente se conectou ao Servidor");
             sSaidaSocket = new DataOutputStream(cliente.getOutputStream());
@@ -69,4 +72,15 @@ class ClienteController {
             
     
     }
+
+    void enviarNomeCliente(String nome) {
+        this.clienteNome = nome;
+        try{
+            sSaidaSocket.writeInt(Protocol.ENVIAR_NOME_CLIENTE);
+            sSaidaSocket.writeUTF(nome);
+        }catch(Exception e){
+           e.printStackTrace();
+        }
+    }
+    
 }

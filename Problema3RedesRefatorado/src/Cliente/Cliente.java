@@ -27,8 +27,21 @@ public class Cliente {
         
         
         controller.iniciarSistema();
+        aguardar(100);
+        
+        System.out.println("Informe seu nome:");
+        String nome = leitor.next();
+        controller.enviarNomeCliente(nome);
         
         
         
+    }
+
+     private static void aguardar(int milisegundos) {
+        try {
+            Thread.sleep(milisegundos);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
     }
 }
