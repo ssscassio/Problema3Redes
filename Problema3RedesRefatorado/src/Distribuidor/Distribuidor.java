@@ -18,9 +18,14 @@ import java.net.Socket;
 public class Distribuidor {
    
     
-    
+    private static DistribuidorController controller;
  
     public static void main(String[] args) throws IOException {
+        
+        
+        //Iniciando a instancia do Controller
+        controller = new DistribuidorController();
+        
         ServerSocket server = new ServerSocket(11111);
         DataInputStream entradaSocket;
         DataOutputStream saidaSocket;
@@ -30,10 +35,11 @@ public class Distribuidor {
             Socket socket = server.accept();
             entradaSocket = new DataInputStream(socket.getInputStream());
             saidaSocket = new DataOutputStream(socket.getOutputStream());
-            ThreadMaquina tratamento = new ThreadMaquina(socket , entradaSocket , saidaSocket);
+            ThreadMaquina tratamento = new ThreadMaquina(controller, socket , entradaSocket , saidaSocket);
             Thread t = new Thread(tratamento);
             t.start();
         }
                 
     }
+    
 }

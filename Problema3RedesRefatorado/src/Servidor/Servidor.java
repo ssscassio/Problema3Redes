@@ -6,11 +6,8 @@
 package Servidor;
 
 import Protocolo.Protocol;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.io.*;
+import java.net.*;
 import java.util.Scanner;
 
 /**
@@ -19,21 +16,20 @@ import java.util.Scanner;
  */
 public class Servidor {
     
-
+    private static ServidorController controller;
+    
     public static void main(String[] args) throws IOException {
-        
-        DataOutputStream saidaSocket;
-        DataInputStream entradaSocket;
-         
+       
+        controller = new ServidorController();
         Scanner entrada = new Scanner(System.in);
-        System.err.println("Informe a porta do servidor"); 
+        System.out.println("Informe a porta do servidor");
         int port = entrada.nextInt();
-        ServerSocket server = new ServerSocket(port);
-        System.err.println("O servidor está operando na porta: "+ port);
-        Socket socket = new Socket("localhost", 11111);
-        saidaSocket = new DataOutputStream(socket.getOutputStream());
-        saidaSocket.writeInt(Protocol.SERVIDOR);
+        System.out.println("Informe o IP do distribuidor");
+        String ipDistribuidor = entrada.next();
+        controller.conectarComDistribuidor(ipDistribuidor,port);
         
+        ServerSocket server = new ServerSocket(port);
+
         while(true){
             System.err.println("Aguardando novas conexões");
             Socket s = server.accept();

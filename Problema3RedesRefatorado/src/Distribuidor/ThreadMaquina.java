@@ -22,8 +22,11 @@ public class ThreadMaquina implements Runnable {
     private Socket socket;
     private DataInputStream entradaSocket;
     private DataOutputStream saidaSocket;
-
-    public ThreadMaquina(Socket socket, DataInputStream entradaSocket, DataOutputStream saidaSocket) {
+    private DistribuidorController controller;
+    
+    public ThreadMaquina(DistribuidorController controller, Socket socket, DataInputStream entradaSocket, DataOutputStream saidaSocket) {
+        
+        this.controller = controller;
         this.socket = socket;
         this.entradaSocket = entradaSocket;
         this.saidaSocket = saidaSocket;
@@ -41,13 +44,14 @@ public class ThreadMaquina implements Runnable {
                 switch (opcao) {
                     // como thread de servidor será diferente de thread de cliente irei personalizar cada uma
                     // cassio lembrando que essa thread irá morrer depois da criação
-                    case 0:
+                    case Protocol.SERVIDOR://diz que é Servidor
                         System.out.println("Novo Servidor se conectou");
-                        TratamentoServidor server = new TratamentoServidor(socket, entradaSocket , saidaSocket);
+                        TratamentoServidor server = new TratamentoServidor(controller, socket, entradaSocket , saidaSocket);
                         Thread s = new Thread(server);
+                        //this.controller.enviarArquivoNovosSemaforos(); //Envia o arquivo com os novos semaforos para todos os servidores
                         s.start();
                         break;
-                    case 1: // diz se é cliente
+                    case Protocol.CLIENTE: // diz se é cliente
                         System.out.println("Novo CLiente se conectou");
                         TratamentoCliente cliente = new TratamentoCliente(socket, entradaSocket , saidaSocket);
                         Thread c = new Thread(cliente);
