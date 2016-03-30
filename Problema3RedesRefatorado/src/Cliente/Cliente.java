@@ -6,24 +6,28 @@
 package Cliente;
 
 import Protocolo.Protocol;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
+import java.util.Scanner;
 
 /**
  *
  * @author allen
  */
 public class Cliente {
+    
+    private static ClienteController controller;
+    
     public static void main(String[] args) throws IOException {
         
-        DataOutputStream saidaSocket;
-        DataInputStream entradaSocket;
-        Socket cliente = new Socket("localhost", 11111);
-        System.err.println("Cliente se conectou ao distribuidor");
-        saidaSocket = new DataOutputStream(cliente.getOutputStream());
-        saidaSocket.writeInt(Protocol.CLIENTE);
+        Scanner leitor = new Scanner(System.in);
+        System.out.println("Informe o IP do distribuidor");
+        String distribuidorIP = leitor.next();
+        controller = new ClienteController(distribuidorIP);
+        
+        
+        controller.iniciarSistema();
+        
         
         
     }

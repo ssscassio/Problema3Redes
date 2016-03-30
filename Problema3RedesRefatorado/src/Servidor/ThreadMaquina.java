@@ -56,7 +56,12 @@ public class ThreadMaquina implements Runnable{
                     Thread s = new Thread(servidor);
                     s.start();
                     break;
-
+                case Protocol.CLIENTE:
+                    System.out.println("Cliente se conectou");
+                    TratamentoCliente cliente = new TratamentoCliente(controller, socket);
+                    Thread c = new Thread(cliente);
+                    c.start();
+                    break;
             }
 
         } catch (IOException ex) {

@@ -21,6 +21,8 @@ public class DistribuidorController {
     private ArrayList<String> ipsPortas; //Cada String no formato IP-PORTA
     private ArrayList<TratamentoServidor> servidoresConectados = new ArrayList<TratamentoServidor>();
     private ArrayList<Socket> conexoes = new ArrayList<Socket>();
+    private int indiceSErvidorRR;
+    
     public DistribuidorController(){
     
     
@@ -71,5 +73,12 @@ public class DistribuidorController {
     
     public int getNumServidoresConectados(){
         return this.conexoes.size();
+    }
+
+    void balancearCliente(TratamentoCliente cliente) {
+        
+        TratamentoServidor servidorParaConectar = servidoresConectados.get(indiceSErvidorRR++ %servidoresConectados.size());
+        cliente.conectarComServidor(servidorParaConectar.getIpServidor(), servidorParaConectar.getPortaDeAcesso());
+        
     }
 }
