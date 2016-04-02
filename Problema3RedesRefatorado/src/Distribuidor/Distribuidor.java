@@ -5,6 +5,7 @@
  */
 package Distribuidor;
 
+import Util.LeituraCliente;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -19,6 +20,7 @@ public class Distribuidor {
    
     
     private static DistribuidorController controller;
+    
  
     public static void main(String[] args) throws IOException {
         
@@ -30,6 +32,9 @@ public class Distribuidor {
         DataInputStream entradaSocket;
         DataOutputStream saidaSocket;
         System.err.println("O distribuidor está rodando na porta 11111");
+        controller.lerLivrosArquivo();
+        controller.lerClientesArquivo();
+        System.out.println(controller.getLivros());
         while(true){
             System.err.println("Aguardando novas conexões");
             Socket socket = server.accept();

@@ -20,11 +20,11 @@ public class TratamentoCliente implements Runnable{
     private final DataInputStream entradaSocket;
 
     private String nomeCliente;
-    TratamentoCliente(ServidorController controller, Socket socket) throws IOException {
+    TratamentoCliente(ServidorController controller, Socket socket,DataInputStream entradaSocket, DataOutputStream saidaSocket) throws IOException {
         this.controller = controller;
         this.socket = socket;
-        this.saidaSocket = new DataOutputStream(socket.getOutputStream());
-        this.entradaSocket = new DataInputStream(socket.getInputStream());
+        this.saidaSocket = saidaSocket;
+        this.entradaSocket = entradaSocket;
      }
 
     @Override
@@ -40,7 +40,15 @@ public class TratamentoCliente implements Runnable{
                         this.nomeCliente = entradaSocket.readUTF();
                         System.err.println("Cliente conectado: "+ this.nomeCliente);
                         break;
-
+                    case Protocol.EFETUAR_COMPRA:
+                        int idLivro = entradaSocket.readInt();
+                        int quantidadeCompra = entradaSocket.readInt();
+                        boolean confirmacao = controller.comprarLivro(nomeCliente, idLivro,quantidadeCompra);
+                        saidaSocket.writeBoolean(confirmacao);//True = sucesso//False = erro
+                        break;
+                    case Protocol.RECEBER_LISTA_LIVROS:
+                        saidaSocket.writeUTF(controller.getStringlivros());
+                        break;
 
                 }
             }

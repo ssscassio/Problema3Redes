@@ -25,10 +25,11 @@ public class Servidor {
         int port = entrada.nextInt();
         System.out.println("Informe o IP do distribuidor");
         String ipDistribuidor = entrada.next();
+       
         
         ServerSocket server = new ServerSocket(port);
-        
-        controller = new ServidorController(server.getInetAddress().getHostAddress(),port);
+
+        controller = new ServidorController("127.0.0.1",port);
         controller.conectarComDistribuidor(ipDistribuidor,port);
         
         while(true){

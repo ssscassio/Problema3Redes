@@ -5,10 +5,15 @@
  */
 package Distribuidor;
 
+import Model.Cliente;
+import Model.Livro;
 import Protocolo.Protocol;
+import Util.*;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,7 +26,13 @@ public class DistribuidorController {
     private ArrayList<String> ipsPortas; //Cada String no formato IP-PORTA
     private ArrayList<TratamentoServidor> servidoresConectados = new ArrayList<TratamentoServidor>();
     private ArrayList<Socket> conexoes = new ArrayList<Socket>();
-    private int indiceSErvidorRR;
+    private int indiceServidorRR;
+    private ArrayList<Livro> livros;
+    
+    
+    private static LeituraLivro leituraLivro;
+    private static LeituraCliente leituraCliente = new LeituraCliente();
+    private ArrayList<Cliente> clientes;
     
     public DistribuidorController(){
     
@@ -38,9 +49,7 @@ public class DistribuidorController {
         saidaSocket.writeInt(Protocol.DISTRIBUIDOR);//Código para dizer que é DISTRIBUIDOR
         
         this.conexoes.add(socket);
-    }
-
-    public void enviarIps() {//Chamar tanto quando servidor entra, como quando servidor sai
+        
         //Reinicia a lista de IPsPorta;
         this.ipsPortas = new ArrayList<String>();
         
@@ -50,6 +59,10 @@ public class DistribuidorController {
             this.ipsPortas.add(aux);
             System.err.println(aux);
         }
+    }
+
+    public void enviarIps() {//Chamar tanto quando servidor entra, como quando servidor sai
+        
         
         //Concatenando Os IP-Porta dos servidores e enviando para os servidores
         for(int i = 0; i<servidoresConectados.size();i++){
@@ -77,7 +90,7 @@ public class DistribuidorController {
 
     void balancearCliente(TratamentoCliente cliente) {
         
-        TratamentoServidor servidorParaConectar = servidoresConectados.get(indiceSErvidorRR++ %servidoresConectados.size());
+        TratamentoServidor servidorParaConectar = servidoresConectados.get(indiceServidorRR++ %servidoresConectados.size());
         cliente.conectarComServidor(servidorParaConectar.getIpServidor(), servidorParaConectar.getPortaDeAcesso());
         
     }
@@ -92,12 +105,102 @@ public class DistribuidorController {
             ipsPortas.remove(index);
             servidoresConectados.remove(index);
             conexoes.remove(index);
+            
+        }   
+    }
+
+    public void lerLivrosArquivo(){
+    
+        leituraLivro = new LeituraLivro();
+        this.livros = leituraLivro.leitura("Livros_Distribuidor.txt");
         
+    }
+    
+    public void reorganizarSemaforos() {
+        
+
+        for (int i = 0; i < livros.size(); i++) {
+            String ipPorta = ipsPortas.get(i % ipsPortas.size());
+            
+            String aux[] = ipPorta.split("-");
+            
+            livros.get(i).setIp(aux[0]);
+            livros.get(i).setPort(Integer.parseInt(aux[1]));
+            livros.get(i).setSemaforo(1);
+        }
+        System.out.println("Verificando Posse dos recursos: ");
+        for (int i = 0; i < livros.size(); i++) {
+
+            Livro l = (Livro) livros.get(i);
+            
+            System.out.println(i + " servidor: " + l.getIp() + " porta " + l.getPort() + " semáforo " + l.getSemaforo());
         }
         
     }
+    
 
-    void reorganizarSemaforos() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String getLivros() {
+        Iterator it = livros.iterator();
+        String txt = "";
+        while (it.hasNext()) {
+            Livro l = (Livro) it.next();
+            txt += l.toString() + "\r\n";
+        }
+        return txt;
+    
+    }
+
+    public void enviarPosseArquivos() {
+        
+        String aux=""; //String que armazenara os livros;
+        
+        Iterator it = livros.iterator();
+        while(it.hasNext()){
+            Livro l = (Livro)it.next();
+            aux+=l.toStringComSemaforo()+"\n";
+        }
+        for(int i = 0; i<servidoresConectados.size();i++){
+            try {
+                DataOutputStream saidaSocket = new DataOutputStream(conexoes.get(i).getOutputStream());
+                saidaSocket.writeInt(Protocol.LISTA_LIVRO_COM_SEMAFORO);//Envia código de operação dizendo que vai enviar IPS
+                saidaSocket.writeUTF(aux);//Colocar Novo arquivo aqui
+                System.err.println("Distribuidor Enviou Livro com Semaforos para servidor:"+ servidoresConectados.get(i).getIpServidor() + "-" + servidoresConectados.get(i).getPortaDeAcesso());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        
+        }
+    }
+    
+    public void AtualizarListaCliente(String nome, double valor) throws IOException{
+        for(int i=0; i <clientes.size(); i++){
+            if(clientes.get(i).getNome().equals(nome)){
+                clientes.get(i).setValor(clientes.get(i).getValor() + valor);
+                leituraCliente.salvarLista(clientes, "Cliente.txt");
+                return;
+            }
+        }
+        
+        Cliente cliente =  new Cliente(nome, valor);
+        clientes.add(cliente);
+        leituraCliente.salvarLista(clientes, "Cliente.txt");
+        
+    }
+
+    void lerClientesArquivo() {
+        this.clientes = leituraCliente.leitura("Cliente.txt");
+    }
+    
+    public void atualizarLivros(int id, int qtd) throws IOException{
+        for(int i = 0; i < livros.size(); i++){
+            if(livros.get(i).getId() == id) {
+                livros.get(i).setQtd(livros.get(i).getQtd() - qtd);
+            }
+        
+        }
+        
+        LeituraLivro leituras = new LeituraLivro();
+    
+        leituras.salvarLista(livros, "Livros_Distribuidor.txt");
     }
 }

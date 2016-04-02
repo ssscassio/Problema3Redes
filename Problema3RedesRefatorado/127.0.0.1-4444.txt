@@ -1,0 +1,5 @@
+id 0 livro 50 tons de cinza valor 50.0 qtd 0
+id 1 livro O codigo da Vince valor 15.0 qtd 2
+id 2 livro Praticamente Inof. valor 7.0 qtd 30
+id 3 livro Sistemas Operac. valor 120.0 qtd 130
+id 4 livro Crepusculo valor 50.0 qtd 1

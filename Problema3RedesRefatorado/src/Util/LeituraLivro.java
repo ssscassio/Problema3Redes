@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class LeituraLivro {
 
-    private List<Livro> livros;
+    private ArrayList<Livro> livros;
 
     public LeituraLivro() {
         livros = new ArrayList<>();
@@ -36,7 +36,7 @@ public class LeituraLivro {
      *
      * @param nomeTXT
      */
-    public List leitura(String nomeTXT) {
+    public ArrayList<Livro> leitura(String nomeTXT) {
         try {
             FileReader arq = new FileReader(nomeTXT);
             BufferedReader lerArq = new BufferedReader(arq);
@@ -79,7 +79,7 @@ public class LeituraLivro {
      * @param livros
      * @return
      */
-    public boolean salvarLista(List livros, String livroTXT) throws FileNotFoundException, IOException {
+    public boolean salvarLista(ArrayList<Livro> livros, String livroTXT) throws FileNotFoundException, IOException {
         new File(livroTXT).delete();
         BufferedWriter writer = new BufferedWriter(new FileWriter(livroTXT)); 
         Iterator it = livros.iterator();
@@ -95,7 +95,7 @@ public class LeituraLivro {
        
        
         LeituraLivro leitura = new LeituraLivro();
-        List livros = leitura.leitura("Livros_Distribuidor.txt");
+        ArrayList<Livro> livros = leitura.leitura("Livros_Distribuidor.txt");
         Iterator it = livros.iterator();
         while (it.hasNext()) {
             Livro livro = (Livro) it.next();
@@ -107,4 +107,41 @@ public class LeituraLivro {
         leitura.salvarLista(livros, "Livros_Distribuidor.txt");
     }
 
+    
+    public void salvarArquivoServidor(String txt, String titulo) throws IOException{
+        ArrayList<Livro> l = new ArrayList<>();
+        String aux[] = txt.split("\n");
+        for(String livro : aux){
+            l.add(refatorarComSemaforo(livro));
+        }
+        salvarLista(l, titulo);
+        System.out.println("Arquivo Salvo com sucesso");
+    }
+
+    public ArrayList<Livro> gravarLivrosMemoriaServidor(String listaLivroComSemaforo) {
+        ArrayList<Livro> listaDeLivros = new ArrayList<Livro>();
+        String aux[] = listaLivroComSemaforo.split("\n");
+        for(String livro : aux){
+            listaDeLivros.add(refatorarComSemaforo(livro));
+        }
+    
+        return listaDeLivros;
+    }
+    private Livro refatorarComSemaforo(String linha) {
+        int a = linha.indexOf("id");
+        int b = linha.indexOf("livro");
+        int c = linha.indexOf("valor");
+        int d = linha.indexOf("qtd");
+        int e = linha.indexOf("ip");
+        int f = linha.indexOf("porta");
+        int g = linha.indexOf("semáforo");
+        int id = Integer.parseInt(linha.substring(3, b - 1));
+        String livro = linha.substring(b + 6, c - 1);
+        double valor = Double.parseDouble(linha.substring(c + 6, d - 1));
+        int qtd = Integer.parseInt(linha.substring(d + 4, e-1));
+        String ip = linha.substring(e+3, f-1);
+        int porta = Integer.parseInt(linha.substring(f+ 6,g-1));
+        int semaforo = 1;
+        return new Livro(id, livro, valor, qtd, ip, porta, semaforo);
+    }
 }

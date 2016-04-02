@@ -46,19 +46,19 @@ public class ThreadMaquina implements Runnable{
             switch (opcao) {
                 case Protocol.DISTRIBUIDOR:
                     System.out.println("Distribuidor se conectou");
-                    TratamentoDistribuidor distribuidor = new TratamentoDistribuidor(controller, socket);
+                    TratamentoDistribuidor distribuidor = new TratamentoDistribuidor(controller, socket,entradaSocket,saidaSocket);
                     Thread d = new Thread(distribuidor);
                     d.start();
                     break;
                 case Protocol.SERVIDOR:
                     System.out.println("Servidor se conectou");
-                    TratamentoServidor servidor = new TratamentoServidor(controller, socket);
+                    TratamentoServidor servidor = new TratamentoServidor(controller, socket,entradaSocket,saidaSocket);
                     Thread s = new Thread(servidor);
                     s.start();
                     break;
                 case Protocol.CLIENTE:
                     System.out.println("Cliente se conectou");
-                    TratamentoCliente cliente = new TratamentoCliente(controller, socket);
+                    TratamentoCliente cliente = new TratamentoCliente(controller, socket, entradaSocket, saidaSocket);
                     Thread c = new Thread(cliente);
                     c.start();
                     break;

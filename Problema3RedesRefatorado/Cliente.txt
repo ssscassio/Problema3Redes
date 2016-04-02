@@ -1,3 +1,12 @@
-cliente: Cassio valor total de compra: 625.0
-cliente: Allen valor total de compra: 264.0
-cliente: Paulo valor total de compra: 124.0
+cliente: Cassio valor total de compra 1014.0
+cliente: Allen valor total de compra 1000.0
+cliente: Paulo valor total de compra 1000.0
+cliente: kakashi valor total de compra 1000.0
+cliente: allen valor total de compra 1170.0
+cliente: Naruto valor total de compra 1000.0
+cliente: Sasuke valor total de compra 240.0
+cliente: Sakura valor total de compra 240.0
+cliente: Teste4 valor total de compra 360.0
+cliente: Teste5 valor total de compra 1251.0
+cliente: Teste6 valor total de compra 1200.0
+cliente: Teste7 valor total de compra 480.0

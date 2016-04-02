@@ -33,6 +33,28 @@ public class Cliente {
         String nome = leitor.next();
         controller.enviarNomeCliente(nome);
         
+        while(true){
+            controller.receberListaLivros();
+            System.out.println(controller.getLivros());
+            System.out.println("Informe a opção desejada");
+            System.out.println("1 - Comprar um livro");
+            
+            int operacao = leitor.nextInt();
+            leitor.nextLine();
+            switch(operacao){
+                case 1: //Comprar um livro
+                    System.out.println("Informe o id do Livro");
+                    int id = leitor.nextInt();
+                    System.out.println("Informe a quantidade");
+                    int qtd = leitor.nextInt();
+                    controller.comprarLivro(id, qtd);
+                    break;
+            
+            
+            }
+            
+            
+        }
         
         
     }

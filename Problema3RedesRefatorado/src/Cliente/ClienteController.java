@@ -31,6 +31,7 @@ class ClienteController {
     //Referente ao cliente
     private String clienteNome;
     
+    private String listaLivros;
     
     public ClienteController(String ipDistribuidor){
         this.ipDistribuidor = ipDistribuidor;
@@ -81,6 +82,42 @@ class ClienteController {
         }catch(Exception e){
            e.printStackTrace();
         }
+    }
+
+    void comprarLivro(int id, int qtd) {
+        
+        try{
+            sSaidaSocket.writeInt(Protocol.EFETUAR_COMPRA);
+            sSaidaSocket.writeInt(id);
+            sSaidaSocket.writeInt(qtd);
+            boolean confirmacao = sEntradaSocket.readBoolean();
+            if(confirmacao){
+                System.out.println("----Livro comprado com sucesso");
+            } else {
+                System.out.println("----Erro ao comprar o livro");
+            }
+        } catch (IOException ex){
+            //Chamar metodo de informar queda do  Servidor  ao distribuidor
+            try{
+                dSaidaSocket.writeInt(Protocol.INFORMAR_QUEDA_SERVIDOR);
+                dSaidaSocket.writeUTF(ipServidor);
+                dSaidaSocket.writeInt(portaServidor);
+                conectarComServidor();
+                enviarNomeCliente(clienteNome);
+                comprarLivro(id, qtd);
+            }catch (IOException ez){
+                System.out.println("Erro ao tentar informar queda do servidor");
+            }
+        }
+    }
+    
+    public void receberListaLivros() throws IOException{
+        sSaidaSocket.writeInt(Protocol.RECEBER_LISTA_LIVROS);
+        this.listaLivros = sEntradaSocket.readUTF();
+    }
+
+    public String getLivros() {
+        return this.listaLivros;
     }
     
 }

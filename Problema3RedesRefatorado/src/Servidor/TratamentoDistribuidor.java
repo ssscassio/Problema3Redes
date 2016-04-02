@@ -19,11 +19,11 @@ public class TratamentoDistribuidor implements Runnable{
     private DataInputStream entradaSocket;
     private DataOutputStream saidaSocket;
     private ServidorController controller;
-    TratamentoDistribuidor(ServidorController controller, Socket socket) throws IOException {
+    TratamentoDistribuidor(ServidorController controller, Socket socket,DataInputStream entradaSocket, DataOutputStream saidaSocket) throws IOException {
         this.socket = socket;
         this.controller = controller;
-        this.entradaSocket = new DataInputStream(socket.getInputStream());
-        this.saidaSocket = new DataOutputStream(socket.getOutputStream());
+        this.entradaSocket = entradaSocket;
+        this.saidaSocket = saidaSocket;
     }
 
     @Override
@@ -32,6 +32,7 @@ public class TratamentoDistribuidor implements Runnable{
         try {
             while(true){
                 int opcao = entradaSocket.readInt();
+                System.err.println("Opcao = " + opcao);
                 switch(opcao){
                     case Protocol.LISTA_DE_IPS:
                         String listaOutrosServidores;
@@ -42,11 +43,15 @@ public class TratamentoDistribuidor implements Runnable{
                         controller.conectarComServidores();
                         break;
                     case Protocol.LISTA_LIVRO_COM_SEMAFORO:
+                        String listaLivroComSemaforo;
+                        listaLivroComSemaforo = entradaSocket.readUTF();
+                        System.out.println(listaLivroComSemaforo);
+                        controller.setLivros(listaLivroComSemaforo);
                         break;
                 }
             }
         } catch (IOException ex) {
-            ex.printStackTrace();
+
         }
     }
     

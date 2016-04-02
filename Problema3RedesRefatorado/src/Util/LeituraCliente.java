@@ -22,7 +22,7 @@ import java.util.List;
  * @author allen
  */
 public class LeituraCliente {
-    private List<Cliente> Clientes;
+    private ArrayList<Cliente> Clientes;
 
     public LeituraCliente () {
         Clientes = new ArrayList<>();
@@ -30,7 +30,7 @@ public class LeituraCliente {
     
     
 
-    public List leitura(String nomeTXT) {
+    public ArrayList<Cliente> leitura(String nomeTXT) {
         try {
             FileReader arq = new FileReader(nomeTXT);
             BufferedReader lerArq = new BufferedReader(arq);
@@ -52,7 +52,7 @@ public class LeituraCliente {
         int b = linha.indexOf("valor total de compra");
         
         String nome = linha.substring(9, b - 1);
-        double valor = Double.parseDouble(linha.substring(b + 23, linha.length()));
+        double valor = Double.parseDouble(linha.substring(b + 22, linha.length()));
      
         return new Cliente(nome, valor);
     }

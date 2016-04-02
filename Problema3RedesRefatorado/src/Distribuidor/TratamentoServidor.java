@@ -38,6 +38,7 @@ public class TratamentoServidor implements Runnable {
         this.entradaSocket = entradaSocket;
         this.saidaSocket = saidaSocket;
         this.controller = controller;
+
     }
 
     @Override
@@ -57,9 +58,19 @@ public class TratamentoServidor implements Runnable {
                         if(controller.getNumServidoresConectados() > 1){//Envia apenas se tiver mais de 1 servidor conectado
                             controller.enviarIps();//Envia os Ips dos outros servidores para todos os servidores    
                         }
+                        controller.reorganizarSemaforos();
+                        controller.enviarPosseArquivos();
                         break;
-
-
+                    case Protocol.GUARDAR_DADOS_CLIENTE:
+                        String nomeCliente = entradaSocket.readUTF();
+                        Double valor = entradaSocket.readDouble();
+                        controller.AtualizarListaCliente(nomeCliente, valor);
+                        break;
+                    case Protocol.ATUALIZAR_LINHA_LIVRO:
+                        int id = entradaSocket.readInt();
+                        int qtd = entradaSocket.readInt();
+                        controller.atualizarLivros(id, qtd);
+                        break;
                 }
             }
             
